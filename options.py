@@ -6,7 +6,6 @@ class Get:
     # "param_name":["type"] or "param_name"=["type","property_name"]
     vars={
         "port":["str"],
-        "genesis":["str","genesis_conf"],
         "verify":["bool","verify_conf"],
         "version":["str","version_conf"],
         "version_allow":["list"],
@@ -41,7 +40,9 @@ class Get:
         "mempool_allowed": ["list"],
         "terminal_output": ["bool"],
         "gui_scaling": ["str"],
-        "mempool_ram_conf": ["bool"]
+        "mempool_ram_conf": ["bool"],
+        "egress": ["bool"],
+        "quicksync": ["bool"]
     }
  
     def load_file(self,filename):
@@ -58,7 +59,7 @@ class Get:
                 elif params[0] == "list":
                     right = [item.strip() for item in right.split(",")]
                 elif params[0] == "bool":
-                    if right == "False":
+                    if right.lower() in ["false", "0", "", "no"]:
                         right = False
                     else:
                         right = True
@@ -70,6 +71,8 @@ class Get:
                     # deal with properties that do not match the config name.
                     left = params[1]
                 setattr(self,left,right)                
+        # Default genesis to keep compatibility
+        self.genesis_conf = "4edadac9093d9326ee4b17f869b14f1a2534f96f9c5d7b48dc9acaed"
         print(self.__dict__)           
                     
     def read(self):

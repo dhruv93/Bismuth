@@ -92,13 +92,13 @@ def balanceget(socket, arg1):
     #get balance
     connections.send(s, "balanceget", 10)
     connections.send(s, arg1, 10)
-    #balance_ledger = connections.receive(s, 10)
-    balance_ledger = connections.receive(s, 10)
-    print ("Address balance: {}".format(balance_ledger[0]))
-    print ("Address credit: {}".format(balance_ledger[1]))
-    print ("Address debit: {}".format(balance_ledger[2]))
-    print ("Address fees: {}".format(balance_ledger[3]))
-    print ("Address rewards: {}".format(balance_ledger[4]))
+    balanceget_result = connections.receive(s, 10)
+    print ("Address balance: {}".format(balanceget_result[0]))
+    print ("Address credit: {}".format(balanceget_result[1]))
+    print ("Address debit: {}".format(balanceget_result[2]))
+    print ("Address fees: {}".format(balanceget_result[3]))
+    print ("Address rewards: {}".format(balanceget_result[4]))
+    print ("Address balance without mempool: {}".format (balanceget_result[5]))
     #get balance
 
 #insert to mempool
@@ -131,7 +131,6 @@ def blocklast(socket):
     #get last block
     connections.send(s, "blocklast", 10)
     block_last = connections.receive(s, 10)
-
 
     print ("Last block number: {}".format(block_last[0]))
     print ("Last block timestamp: {}".format(block_last[1]))
@@ -233,24 +232,10 @@ def peersget(socket):
     print (peers_received)
 
 def statusget(socket):
-    connections.send(s, "statusget", 10)
+    connections.send(s, "statusjson", 10)
     response = connections.receive(s, 10)
-    node_address = response[0]
-    nodes_count = response[1]
-    nodes_list = response[2]
-    threads_count = response[3]
-    uptime = response[4]
-    consensus = response[5]
-    consensus_percentage = response[6]
-    version = response[7]
-    print("Node address:", node_address)
-    print("Number of nodes:", nodes_count)
-    print("List of nodes:", nodes_list)
-    print("Number of threads:", threads_count)
-    print("Uptime:", uptime)
-    print("Consensus:", consensus)
-    print("Consensus percentage:", consensus_percentage)
-    print("Version:", version)
+    for key in response:
+        print (key,":",response[key])
 
 def addvalidate(socket, arg1):
     connections.send(s, "addvalidate", 10)

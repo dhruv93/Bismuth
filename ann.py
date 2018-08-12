@@ -6,18 +6,19 @@ def replace_regex(string, replace):
 
 def ann_get(cursor, ann_addr):
     try:
-        cursor.execute("SELECT openfield FROM transactions WHERE address = ? AND openfield LIKE ? ORDER BY block_height DESC", (ann_addr,"ann=" + '%',))
+        cursor.execute("SELECT openfield FROM transactions WHERE address = ? AND openfield LIKE ? ORDER BY block_height DESC LIMIT 1", (ann_addr, "ann=%"))
         result = cursor.fetchone()[0]
-        ann_stripped = replace_regex(result,"ann=")
+        ann_stripped = replace_regex(result, "ann=")
+        return ann_stripped
     except:
-        ann_stripped = None
-    return(ann_stripped)
+        return
 
 def ann_ver_get(cursor, ann_addr):
     try:
-        cursor.execute("SELECT openfield FROM transactions WHERE address = ? AND openfield LIKE ? ORDER BY block_height DESC", (ann_addr,"annver=" + '%',))
+        cursor.execute("SELECT openfield FROM transactions WHERE address = ? AND openfield LIKE ? ORDER BY block_height DESC LIMIT 1", (ann_addr, "annver=%"))
         result = cursor.fetchone()[0]
-        ann_ver_stripped = replace_regex(result,"annver=")
+        ann_ver_stripped = replace_regex(result, "annver=")
+        return ann_ver_stripped
     except:
-        ann_ver_stripped = None
-    return(ann_ver_stripped)
+        return
+    
